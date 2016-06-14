@@ -5,11 +5,11 @@
  */
 package bridge.controller;
 
-import static bridge.controller.GameController.scores;
 import bridge.data.card;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.control.Alert;
+import javax.smartcardio.Card;
 
 /**
  *
@@ -99,6 +99,20 @@ public class MoveController {
         }
     }
 
+     /**
+     * Get the better out of two cards
+     *
+     * @param cardOne
+     * @param cardTwo
+     * @return
+     */
+    public card getBetterCard(card cardOne, card cardTwo) {
+        if (isBetter(cardOne, cardTwo)) {
+            return cardOne;
+        }
+        return cardTwo;
+    }
+    
     /**
      * Method that decides if the current card is better than the max card
      *
@@ -108,7 +122,10 @@ public class MoveController {
      */
     public boolean isBetter(card currentCard, card max) {
         ranks = new ArrayList<>(Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"));
-        return currentCard.getSuit() == max.getSuit() && ranks.indexOf(currentCard.getRank()) > ranks.indexOf(max.getRank());
+        if(currentCard.getSuit() == max.getSuit()){
+            return ranks.indexOf(currentCard.getRank()) > ranks.indexOf(max.getRank());
+        }
+        return false;
     }
 
     public boolean moveIsLegit(card cardToThrow, ArrayList<card> cardsInHand, card maxCard) {
@@ -127,19 +144,7 @@ public class MoveController {
         return true;
     }
 
-    /**
-     * Get the better out of two cards
-     *
-     * @param cardOne
-     * @param cardTwo
-     * @return
-     */
-    public card getBetterCard(card cardOne, card cardTwo) {
-        if (isBetter(cardOne, cardTwo)) {
-            return cardOne;
-        }
-        return cardTwo;
-    }
+   
 
     /**
      * Sends the card for the first turn
@@ -159,6 +164,41 @@ public class MoveController {
             }
         }
         return maxCard;
+    }
+    
+    /**
+     * Get the better out of two cards
+     *
+     * @param cardOne
+     * @param cardTwo
+     * @return
+     */
+    public static card getBetterCard1(card cardOne, card cardTwo) {
+        if (isBetter1(cardOne, cardTwo)) {
+            return cardOne;
+        }
+        return cardTwo;
+    }
+    
+    /**
+     * Method that decides if the current card is better than the max card
+     *
+     * @param currentCard
+     * @param max
+     * @return
+     */
+    public static boolean isBetter1(card currentCard, card max) {
+       ArrayList<String> ranks = new ArrayList<>(Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"));
+        if(currentCard.getSuit() == max.getSuit()){
+            return ranks.indexOf(currentCard.getRank()) > ranks.indexOf(max.getRank());
+        }
+        return false;
+    }
+    
+    public static void main(String[] args){
+       card C3 = new card ('C',"3");
+       card SA = new card ('S',"A");
+       System.out.println(getBetterCard1(SA, C3));
     }
 
 }

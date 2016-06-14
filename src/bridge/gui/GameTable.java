@@ -123,7 +123,7 @@ public class GameTable {
         topView.setFitWidth(148);
         topView.setRotate(180);
         topSpace.getChildren().add(topView);
-        HBox.setMargin(topView, new Insets(10, 50, 0, screenBounds.getWidth() / 3.5));
+        HBox.setMargin(topView, new Insets(0, 50, 0, screenBounds.getWidth() / 3.5));
         nextRoundContainer.setVisible(false);
 
         rightSpace = new VBox();
