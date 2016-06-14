@@ -131,26 +131,22 @@ public class GameController extends Application {
                     if (moveController.moveIsLegit(cardClicked, playerOneCardsInPlay, bestCard)) {
                         playerOneMoveLast(cardClicked, playerCardsContainer, middleSpace);
                     }
-                } 
-                //if P3 won the last round
+                } //if P3 won the last round
                 else if (roundWinner.equals("P3")) {
                     //the card clicked must be a legitimate move set
                     if (moveController.moveIsLegit(cardClicked, playerOneCardsInPlay, bestCard)) {
                         playerOneMoveThird(cardClicked, playerCardsContainer, middleSpace);
                     }
-                }
-                //if P4 won the last round
+                } //if P4 won the last round
                 else if (roundWinner.equals("P4")) {
                     //the card clicked must be a legitimate move set
                     if (moveController.moveIsLegit(cardClicked, playerOneCardsInPlay, bestCard)) {
                         playerOneMoveSecond(cardClicked, playerCardsContainer, middleSpace);
                     }
-                }
-                
-                //if P1 won the last round
+                } //if P1 won the last round
                 else if (roundWinner.equals("P1")) {
-                        playerOneMoveFirst(cardClicked, playerCardsContainer, middleSpace);
-                    
+                    playerOneMoveFirst(cardClicked, playerCardsContainer, middleSpace);
+
                 }
 
                 if (totalTurns == 13) {
@@ -194,16 +190,15 @@ public class GameController extends Application {
         playerThreeCardsInPlay.remove(playerThreeCard);
         viewController.putCardInMiddle(playerThreeCard, middleSpace);
 
-        bestCard = moveController.getBetterCard(playerThreeCard,bestCard);
+        bestCard = moveController.getBetterCard(playerThreeCard, bestCard);
 
         card playerFourCard = moveController.bestCardToThrow(playerFourCardsInPlay, bestCard);
         playerFourCardsInPlay.remove(playerFourCard);
         viewController.putCardInMiddle(playerFourCard, middleSpace);
 
         bestCard = moveController.getBetterCard(playerFourCard, bestCard);
-        
-        //System.out.println("BEST CARD 1 : " + bestCard);
 
+        //System.out.println("BEST CARD 1 : " + bestCard);
         //decide the round winner
         roundWinner = decideRoundWinner();
         //show the winner and the button to proceed to the next round
@@ -211,7 +206,7 @@ public class GameController extends Application {
         //display the winner
         gameTable.getWinnerText().setText(roundWinner + " wins round " + totalTurns + "!");
     }
-    
+
     public void playerOneMoveSecond(card cardClicked, HBox playerCardsContainer, HBox middleSpace) {
         int indexToRemove = 0;
         int counter = 0;
@@ -225,7 +220,7 @@ public class GameController extends Application {
         }
         playerCardsContainer.getChildren().remove(indexToRemove);
         viewController.putCardInMiddle(cardClicked, middleSpace);
-        
+
         //find the best card
         bestCard = moveController.getBetterCard(cardClicked, bestCard);
 
@@ -243,9 +238,8 @@ public class GameController extends Application {
         viewController.putCardInMiddle(playerThreeCard, middleSpace);
 
         bestCard = moveController.getBetterCard(playerThreeCard, bestCard);
-        
-        //System.out.println("BEST CARD 4 : " + bestCard);
 
+        //System.out.println("BEST CARD 4 : " + bestCard);
         //decide the round winner
         roundWinner = decideRoundWinner();
         //show the winner and the button to proceed to the next round
@@ -253,7 +247,7 @@ public class GameController extends Application {
         //display the winner
         gameTable.getWinnerText().setText(roundWinner + " wins round " + totalTurns + "!");
     }
-    
+
     public void playerOneMoveThird(card cardClicked, HBox playerCardsContainer, HBox middleSpace) {
         int indexToRemove = 0;
         int counter = 0;
@@ -272,7 +266,7 @@ public class GameController extends Application {
         playerOneCardsInPlay.remove(cardClicked);
 
         bestCard = moveController.getBetterCard(cardClicked, bestCard);
-        
+
         //second player goes next
         card playerTwoCard = moveController.bestCardToThrow(playerTwoCardsInPlay, bestCard);
         playerTwoCardsInPlay.remove(playerTwoCard);
@@ -306,9 +300,8 @@ public class GameController extends Application {
         playerOneCardsInPlay.remove(cardClicked);
 
         bestCard = moveController.getBetterCard(cardClicked, bestCard);
-        
-        //System.out.println("BEST CARD 2 : " + bestCard);
 
+        //System.out.println("BEST CARD 2 : " + bestCard);
         //decide the round winner
         roundWinner = decideRoundWinner();
         //show the winner and the button to proceed to the next round
@@ -318,25 +311,23 @@ public class GameController extends Application {
     }
 
     public void proceedToNextRound(HBox middleSpace) {
-        gameTable.getNextRoundContainer().setVisible(false);
-        gameTable.emptyMiddleDeck();
-        
-        System.out.println("P1: " + playerOneCardsInPlay.size());
-        System.out.println("P2: " + playerTwoCardsInPlay.size());
-        System.out.println("P3: " + playerThreeCardsInPlay.size());
-        System.out.println("P4: " + playerFourCardsInPlay.size());
+        if (totalTurns < 13) {
 
-        //if player 2 won the round
-        if (roundWinner.equals("P2")) {
-            playerTwoMoveFirst(middleSpace);
-        }
-        //if player 3 won the round
-        if (roundWinner.equals("P3")) {
-            playerThreeMoveFirst(middleSpace);
-        }
-        //if player 4 won the round
-        if (roundWinner.equals("P4")) {
-            playerFourMoveFirst(middleSpace);
+            gameTable.getNextRoundContainer().setVisible(false);
+            gameTable.emptyMiddleDeck();
+
+            //if player 2 won the round
+            if (roundWinner.equals("P2")) {
+                playerTwoMoveFirst(middleSpace);
+            }
+            //if player 3 won the round
+            if (roundWinner.equals("P3")) {
+                playerThreeMoveFirst(middleSpace);
+            }
+            //if player 4 won the round
+            if (roundWinner.equals("P4")) {
+                playerFourMoveFirst(middleSpace);
+            }
         }
     }
 
@@ -359,7 +350,6 @@ public class GameController extends Application {
         viewController.putCardInMiddle(playerFourCard, middleSpace);
 
         bestCard = moveController.getBetterCard(playerFourCard, bestCard);
-        
 
     }
 
@@ -375,18 +365,18 @@ public class GameController extends Application {
         viewController.putCardInMiddle(playerFourCard, middleSpace);
 
         bestCard = moveController.getBetterCard(playerFourCard, bestCard);
-        
+
     }
-    
+
     public void playerFourMoveFirst(HBox middleSpace) {
         //player four goes first
         card playerFourCard = moveController.bestCardToThrow(playerFourCardsInPlay, bestCard);
         playerFourCardsInPlay.remove(playerFourCard);
         viewController.putCardInMiddle(playerFourCard, middleSpace);
         bestCard = playerFourCard;
-        
+
     }
-    
+
     public String decideRoundWinner() {
         if (playerOneCards.indexOf(bestCard) != -1) {
             scores[0] = scores[0] + 1;
@@ -421,11 +411,13 @@ public class GameController extends Application {
         empty(playerFourCards);
         empty(playerFourCardsInPlay);
 
+        gameTable.emptyMiddleDeck();
+
         for (int score : scores) {
             score = 0;
         }
 
-        getTableReady();
+        gameTable.layoutGUI();
     }
 
     public void empty(ArrayList list) {
