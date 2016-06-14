@@ -32,11 +32,13 @@ public class GameController extends Application {
 
     static SetUpController setUpController;
     static ViewController viewController;
-    
+
     static MoveController moveController;
-    
+
     //playing card deck
     static ArrayList<card> deck;
+    
+    static card bestCard;
 
     static ArrayList<card> playerOneCards;
     static ArrayList<card> playerOneCardsInPlay;
@@ -117,13 +119,16 @@ public class GameController extends Application {
      * @param playerCardsContainer is the container showing the user's cards
      * @param middleSpace
      */
-    public void handleCardClick(card cardClicked, HBox playerCardsContainer, HBox middleSpace){
-        //the first turn
+    public void handleCardClick(card cardClicked, HBox playerCardsContainer, HBox middleSpace) {
+        //the first roud, P1 goes first
         if (totalTurns++ == 0) {
-            System.out.println("HERE");
-            playerOneMove(cardClicked, playerCardsContainer, middleSpace);
+            playerOneMoveFirst(cardClicked, playerCardsContainer, middleSpace);
         } else {
-
+            //if P2 won the round
+            if(!roundWinner.equals("P1")){
+                playerOneMoveLast(cardClicked, playerCardsContainer, middleSpace);
+            }
+            
             if (totalTurns == 12) {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
@@ -135,11 +140,9 @@ public class GameController extends Application {
         }
     }
 
-    public void playerOneMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace){
+    public void playerOneMoveFirst(card cardClicked, HBox playerCardsContainer, HBox middleSpace) {
         int indexToRemove = 0;
         int counter = 0;
-        //the best card in the round
-        card bestCard;
         for (Node playerCard : playerCardsContainer.getChildren()) {
             ImageView currentCardView = (ImageView) playerCard;
 
@@ -173,66 +176,71 @@ public class GameController extends Application {
         bestCard = moveController.getBetterCard(bestCard, playerFourCard);
 
         //decide the round winner
-        roundWinner = decideRoundWinner(bestCard, scores);
+        roundWinner = decideRoundWinner();
         //show the winner and the button to proceed to the next round
         gameTable.getNextRoundContainer().setVisible(true);
         //display the winner
         gameTable.getWinnerText().setText(roundWinner + " wins round " + totalTurns + "!");
     }
     
-    public void proceedToNextRound(){
-        gameTable.getNextRoundContainer().setVisible(false);
+    public void playerOneMoveLast(card cardClicked, HBox playerCardsContainer, HBox middleSpace){
+        int indexToRemove = 0;
+        int counter = 0;
+        for (Node playerCard : playerCardsContainer.getChildren()) {
+            ImageView currentCardView = (ImageView) playerCard;
+
+            if (currentCardView.getId().equals(cardClicked.toString())) {
+                indexToRemove = counter;
+            }
+            counter++;
+        }
+        playerCardsContainer.getChildren().remove(indexToRemove);
+        viewController.putCardInMiddle(cardClicked, middleSpace);
+
+        //remove the card that the user has played
+        playerOneCardsInPlay.remove(cardClicked);
         
+        bestCard = moveController.getBetterCard(cardClicked, bestCard);
+        
+        //decide the round winner
+        roundWinner = decideRoundWinner();
+        //show the winner and the button to proceed to the next round
+        gameTable.getNextRoundContainer().setVisible(true);
+        //display the winner
+        gameTable.getWinnerText().setText(roundWinner + " wins round " + totalTurns + "!");
+    }
+
+    public void proceedToNextRound(HBox middleSpace) {
+        gameTable.getNextRoundContainer().setVisible(false);
+        gameTable.emptyMiddleDeck();
+
         //if player 1 won the round
-        if(roundWinner.equals("P1")){
-            
+        if (!roundWinner.equals("P1")) {
+            playerTwoMove(middleSpace);
         }
     }
 
-//    public void playerTwoMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace, ViewController viewController, MoveController moveController) throws InterruptedException {
-//        int indexToRemove = 0;
-//        int counter = 0;
-//        card bestCard;
-//
-//        //player two goes first
-//        card playerTwoCard = moveController.sendFirstCard(playerTwoCardsInPlay);
-//        playerTwoCardsInPlay.remove(playerTwoCard);
-//        viewController.putCardInMiddle(playerTwoCard, middleSpace);
-//        //assign the best card to the card played by player two
-//        bestCard = playerTwoCard;
-//
-//        //player three goes next
-//        card playerThreeCard = moveController.bestCardToThrow(playerThreeCardsInPlay, bestCard);
-//        playerThreeCardsInPlay.remove(playerThreeCard);
-//        viewController.putCardInMiddle(playerThreeCard, middleSpace);
-//
-//        bestCard = moveController.getBetterCard(bestCard, playerThreeCard);
-//
-//        card playerFourCard = moveController.bestCardToThrow(playerFourCardsInPlay, bestCard);
-//        playerFourCardsInPlay.remove(playerFourCard);
-//        viewController.putCardInMiddle(playerFourCard, middleSpace);
-//
-//        bestCard = moveController.getBetterCard(bestCard, playerFourCard);
-//
-//        for (Node playerCard : playerCardsContainer.getChildren()) {
-//            ImageView currentCardView = (ImageView) playerCard;
-//
-//            if (currentCardView.getId().equals(cardClicked.toString())) {
-//                indexToRemove = counter;
-//            }
-//            counter++;
-//        }
-//        playerCardsContainer.getChildren().remove(indexToRemove);
-//        viewController.putCardInMiddle(cardClicked, middleSpace);
-//
-//        //remove the card that the user has played
-//        playerOneCardsInPlay.remove(cardClicked);
-//
-//        bestCard = moveController.getBetterCard(bestCard, cardClicked);
-//
-//        //decide the round winner
-//        roundWinner = decideRoundWinner(bestCard, scores);
-//    }
+    public void playerTwoMove(HBox middleSpace){
+        //player two goes first
+        card playerTwoCard = moveController.sendFirstCard(playerTwoCardsInPlay);
+        playerTwoCardsInPlay.remove(playerTwoCard);
+        viewController.putCardInMiddle(playerTwoCard, middleSpace);
+        //assign the best card to the card played by player two
+        bestCard = playerTwoCard;
+
+        //player three goes next
+        card playerThreeCard = moveController.bestCardToThrow(playerThreeCardsInPlay, bestCard);
+        playerThreeCardsInPlay.remove(playerThreeCard);
+        viewController.putCardInMiddle(playerThreeCard, middleSpace);
+        bestCard = moveController.getBetterCard(bestCard, playerThreeCard);
+
+        card playerFourCard = moveController.bestCardToThrow(playerFourCardsInPlay, bestCard);
+        playerFourCardsInPlay.remove(playerFourCard);
+        viewController.putCardInMiddle(playerFourCard, middleSpace);
+
+        bestCard = moveController.getBetterCard(bestCard, playerFourCard);
+        
+    }
 //
 //    public void playerThreeMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace, ViewController viewController, MoveController moveController) throws InterruptedException {
 //        int indexToRemove = 0;
@@ -326,8 +334,7 @@ public class GameController extends Application {
 //        //decide the round winner
 //        roundWinner = decideRoundWinner(bestCard, scores);
 //    }
-
-    public String decideRoundWinner(card bestCard, int[] scores) {
+    public String decideRoundWinner() {
         if (playerOneCards.indexOf(bestCard) != -1) {
             scores[0] = scores[0] + 1;
             return "P1";

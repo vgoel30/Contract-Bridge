@@ -6,6 +6,7 @@
 package bridge.gui;
 
 import bridge.controller.GameController;
+import bridge.controller.MoveController;
 import bridge.controller.SetUpController;
 import bridge.controller.ViewController;
 import bridge.data.card;
@@ -16,6 +17,7 @@ import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -36,6 +38,7 @@ public class GameTable {
     GameController gameController;
     ViewController viewController;
     SetUpController setUpController;
+    MoveController moveController;
 
     BorderPane tableDeck;
 
@@ -83,6 +86,7 @@ public class GameTable {
         gameController = new GameController();
         setUpController = new SetUpController();
         viewController = new ViewController();
+        moveController = new MoveController();
 
         leftSpace = new VBox();
         leftSpace.setMinSize(250, 250);
@@ -111,7 +115,7 @@ public class GameTable {
         topSpace.getChildren().add(nextRoundContainer);
 
         nextRoundButton.setOnAction(e -> {
-            gameController.proceedToNextRound();
+            gameController.proceedToNextRound(middleSpace);
         });
 
         ImageView topView = new ImageView(rearCard);
@@ -196,6 +200,10 @@ public class GameTable {
             });
         }
 
+    }
+    
+    public void emptyMiddleDeck(){
+        middleSpace.getChildren().clear();
     }
 
     public BorderPane getTableDeck() {
