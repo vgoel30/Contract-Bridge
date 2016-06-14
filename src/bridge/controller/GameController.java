@@ -37,7 +37,7 @@ public class GameController extends Application {
 
     //playing card deck
     static ArrayList<card> deck;
-    
+
     static card bestCard;
 
     static ArrayList<card> playerOneCards;
@@ -120,22 +120,26 @@ public class GameController extends Application {
      * @param middleSpace
      */
     public void handleCardClick(card cardClicked, HBox playerCardsContainer, HBox middleSpace) {
-        //the first roud, P1 goes first
-        if (totalTurns++ == 0) {
-            playerOneMoveFirst(cardClicked, playerCardsContainer, middleSpace);
-        } else {
-            //if P2 won the round
-            if(!roundWinner.equals("P1")){
-                playerOneMoveLast(cardClicked, playerCardsContainer, middleSpace);
-            }
-            
-            if (totalTurns == 12) {
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Information Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("Winner: " + scores[0] + " " + scores[1] + " " + scores[2] + " " + scores[3]);
+        if (!gameTable.getNextRoundContainer().isVisible()) {
+            //the first roud, P1 goes first
+            if (totalTurns++ == 0) {
+                playerOneMoveFirst(cardClicked, playerCardsContainer, middleSpace);
+            } else {
+                //if P2 won the round
+                if (!roundWinner.equals("P1")) {
+                    //the card clicked must be a legitimate move set
+                    if (moveController.moveIsLegit(cardClicked, playerOneCardsInPlay, bestCard)) {
+                        playerOneMoveLast(cardClicked, playerCardsContainer, middleSpace);
+                    }
+                }
 
-                alert.showAndWait();
+                if (totalTurns == 12) {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Winner: " + scores[0] + " " + scores[1] + " " + scores[2] + " " + scores[3]);
+                    alert.showAndWait();
+                }
             }
         }
     }
@@ -182,8 +186,8 @@ public class GameController extends Application {
         //display the winner
         gameTable.getWinnerText().setText(roundWinner + " wins round " + totalTurns + "!");
     }
-    
-    public void playerOneMoveLast(card cardClicked, HBox playerCardsContainer, HBox middleSpace){
+
+    public void playerOneMoveLast(card cardClicked, HBox playerCardsContainer, HBox middleSpace) {
         int indexToRemove = 0;
         int counter = 0;
         for (Node playerCard : playerCardsContainer.getChildren()) {
@@ -199,9 +203,9 @@ public class GameController extends Application {
 
         //remove the card that the user has played
         playerOneCardsInPlay.remove(cardClicked);
-        
+
         bestCard = moveController.getBetterCard(cardClicked, bestCard);
-        
+
         //decide the round winner
         roundWinner = decideRoundWinner();
         //show the winner and the button to proceed to the next round
@@ -220,7 +224,7 @@ public class GameController extends Application {
         }
     }
 
-    public void playerTwoMove(HBox middleSpace){
+    public void playerTwoMove(HBox middleSpace) {
         //player two goes first
         card playerTwoCard = moveController.sendFirstCard(playerTwoCardsInPlay);
         playerTwoCardsInPlay.remove(playerTwoCard);
@@ -239,7 +243,7 @@ public class GameController extends Application {
         viewController.putCardInMiddle(playerFourCard, middleSpace);
 
         bestCard = moveController.getBetterCard(bestCard, playerFourCard);
-        
+
     }
 //
 //    public void playerThreeMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace, ViewController viewController, MoveController moveController) throws InterruptedException {
@@ -334,6 +338,7 @@ public class GameController extends Application {
 //        //decide the round winner
 //        roundWinner = decideRoundWinner(bestCard, scores);
 //    }
+
     public String decideRoundWinner() {
         if (playerOneCards.indexOf(bestCard) != -1) {
             scores[0] = scores[0] + 1;

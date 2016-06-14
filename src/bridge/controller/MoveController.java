@@ -5,18 +5,21 @@
  */
 package bridge.controller;
 
+import static bridge.controller.GameController.scores;
 import bridge.data.card;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.scene.control.Alert;
 
 /**
  *
  * @author varungoel
  */
 public class MoveController {
+
     ArrayList<String> ranks;
-    
-     /**
+
+    /**
      * Method to check if a card of the same suit exists in a given hand
      *
      * @param cards is the hand of cards
@@ -107,24 +110,43 @@ public class MoveController {
         ranks = new ArrayList<>(Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"));
         return currentCard.getSuit() == max.getSuit() && ranks.indexOf(currentCard.getRank()) > ranks.indexOf(max.getRank());
     }
-    
+
+    public boolean moveIsLegit(card cardToThrow, ArrayList<card> cardsInHand, card maxCard) {
+        if (hasSameSuit(cardsInHand, maxCard)) {
+            if (cardToThrow.getSuit() == maxCard.getSuit()) {
+                return true;
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Move");
+                alert.setContentText("Card from the suit must be thrown!");
+                alert.showAndWait();
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Get the better out of two cards
+     *
      * @param cardOne
      * @param cardTwo
-     * @return 
+     * @return
      */
-    public card getBetterCard(card cardOne, card cardTwo){
-        if(isBetter(cardOne, cardTwo))
+    public card getBetterCard(card cardOne, card cardTwo) {
+        if (isBetter(cardOne, cardTwo)) {
             return cardOne;
+        }
         return cardTwo;
     }
 
-   /**
-    * Sends the card for the first turn
-    * @param cards
-    * @return 
-    */
+    /**
+     * Sends the card for the first turn
+     *
+     * @param cards
+     * @return
+     */
     public card sendFirstCard(ArrayList<card> cards) {
         ranks = new ArrayList<>(Arrays.asList("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"));
 
@@ -138,7 +160,5 @@ public class MoveController {
         }
         return maxCard;
     }
-    
-    
-    
+
 }
