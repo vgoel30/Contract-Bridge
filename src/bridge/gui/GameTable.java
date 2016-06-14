@@ -17,6 +17,7 @@ import static javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -40,7 +41,13 @@ public class GameTable {
 
     VBox leftSpace;
     VBox rightSpace;
+    
     HBox topSpace;
+    
+    VBox nextRoundContainer;
+    Text winnerText;
+    Button nextRoundButton;
+    
     HBox bottomSpace;
     HBox middleSpace;
 
@@ -78,7 +85,6 @@ public class GameTable {
         viewController = new ViewController();
 
         leftSpace = new VBox();
-        leftSpace.setStyle("-fx-background-color: #26A65B");
         leftSpace.setMinSize(250, 250);
         tableDeck.setLeft(leftSpace);
 
@@ -91,22 +97,32 @@ public class GameTable {
         VBox.setMargin(leftView, new Insets(70, 0, 0, 35));
 
         topSpace = new HBox();
-        topSpace.setStyle("-fx-background-color: #26A65B");
         topSpace.setMinHeight(180);
         topSpace.setMaxHeight(180);
         tableDeck.setTop(topSpace);
         
-        topSpace.getChildren().add(new Text("WINNER"));
+        winnerText = new Text("WINNER");
+        nextRoundButton = new Button("Next Round");
+        
+        nextRoundContainer = new VBox(winnerText,nextRoundButton);
+        VBox.setMargin(winnerText, new Insets(70, 0, 0, 50));
+        VBox.setMargin(nextRoundButton, new Insets(20, 0, 0, 50));
+        
+        topSpace.getChildren().add(nextRoundContainer);
+        nextRoundContainer.setVisible(false);
+        
+        nextRoundButton.setOnAction(e-> {
+            gameController.proceedToNextRound();
+        });
 
         ImageView topView = new ImageView(rearCard);
         topView.setFitHeight(170);
         topView.setFitWidth(148);
         topView.setRotate(180);
         topSpace.getChildren().add(topView);
-        HBox.setMargin(topView, new Insets(10, 50, 0, screenBounds.getWidth() / 2.5));
+        HBox.setMargin(topView, new Insets(10, 50, 0, screenBounds.getWidth() / 2.8));
 
         rightSpace = new VBox();
-        rightSpace.setStyle("-fx-background-color: #26A65B");
         rightSpace.setMinSize(250, 250);
         tableDeck.setRight(rightSpace);
         ImageView rightView = new ImageView(rearCard);
@@ -114,19 +130,30 @@ public class GameTable {
         rightView.setFitWidth(175);
         rightView.setRotate(270);
         rightSpace.getChildren().add(rightView);
+        
         VBox.setMargin(rightView, new Insets(70, 0, 0, 35));
-
+        
         bottomSpace = new HBox();
-        bottomSpace.setStyle("-fx-background-color: #26A65B");
         bottomSpace.setMinHeight(175);
         bottomSpace.setMaxHeight(175);
         tableDeck.setBottom(bottomSpace);
 
         middleSpace = new HBox();
         tableDeck.setCenter(middleSpace);
+        
+        
+        initStyle();
+    }
+    
+    public void initStyle(){
         middleSpace.setStyle("-fx-background-color: #006442");
-        //#006442
+        leftSpace.setStyle("-fx-background-color: #26A65B");
+        rightSpace.setStyle("-fx-background-color: #26A65B");
+        topSpace.setStyle("-fx-background-color: #26A65B");
+        bottomSpace.setStyle("-fx-background-color: #26A65B");
         tableDeck.setStyle("-fx-background-color: #26A65B");
+        
+        winnerText.setStyle("-fx-font-size: 22px");
     }
 
     /**
@@ -163,12 +190,10 @@ public class GameTable {
             //set the ID of the image view
             cardImageView.setId(imageViewID);
 
+            //attach event handler
             cardImageView.setOnMouseClicked(e -> {
-                try {
                     gameController.handleCardClick(playerCard, bottomSpace, middleSpace, viewController);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(GameTable.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
             });
         }
 
@@ -176,6 +201,14 @@ public class GameTable {
 
     public BorderPane getTableDeck() {
         return tableDeck;
+    }
+
+    public VBox getNextRoundContainer() {
+        return nextRoundContainer;
+    }
+    
+    public Text getWinnerText(){
+        return winnerText;
     }
 
 }

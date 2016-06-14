@@ -18,7 +18,7 @@ import javafx.scene.layout.HBox;
  */
 public class ViewController {
 
-    public void putCardInMiddle(card cardClicked, HBox middleSpace) throws InterruptedException {
+    public void putCardInMiddle(card cardClicked, HBox middleSpace) {
         if (middleSpace.getChildren().size() != 4) {
             insertCardImage(cardClicked, middleSpace);
         } 
@@ -29,14 +29,13 @@ public class ViewController {
         }
     }
 
-    public void insertCardImage(card cardClicked, HBox middleSpace) throws InterruptedException {
+    public void insertCardImage(card cardClicked, HBox middleSpace){
         Image wow = new Image("./pictures/" + cardClicked.toString() + ".png");
         ImageView view = new ImageView(wow);
         view.setFitWidth(100);
         view.setFitHeight(150);
         middleSpace.getChildren().add(view);
         HBox.setMargin(view, new Insets(125, 0, 0, 90));
-        Thread.sleep(150);
     }
 
     public void resetMiddleCards(HBox middleSpace) {
