@@ -30,8 +30,11 @@ public class GameController extends Application {
 
     static GameTable gameTable;
 
-    SetUpController setUpController;
-    ViewController viewController;
+    static SetUpController setUpController;
+    static ViewController viewController;
+    
+    static MoveController moveController;
+    
     //playing card deck
     static ArrayList<card> deck;
 
@@ -71,6 +74,7 @@ public class GameController extends Application {
         gameTable = new GameTable();
         setUpController = new SetUpController();
         viewController = new ViewController();
+        moveController = new MoveController();
 
         //keep track of all cards; for scoring
         playerFourCards = new ArrayList<>();
@@ -112,17 +116,12 @@ public class GameController extends Application {
      * @param cardClicked is the clicked card
      * @param playerCardsContainer is the container showing the user's cards
      * @param middleSpace
-     * @param viewController
-     * @return
-     * @throws java.lang.InterruptedException
      */
-    public void handleCardClick(card cardClicked, HBox playerCardsContainer, HBox middleSpace, ViewController viewController){
-        MoveController moveController = new MoveController();
-
+    public void handleCardClick(card cardClicked, HBox playerCardsContainer, HBox middleSpace){
         //the first turn
         if (totalTurns++ == 0) {
             System.out.println("HERE");
-            playerOneMove(cardClicked, playerCardsContainer, middleSpace, viewController, moveController);
+            playerOneMove(cardClicked, playerCardsContainer, middleSpace);
         } else {
 
             if (totalTurns == 12) {
@@ -136,7 +135,7 @@ public class GameController extends Application {
         }
     }
 
-    public void playerOneMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace, ViewController viewController, MoveController moveController){
+    public void playerOneMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace){
         int indexToRemove = 0;
         int counter = 0;
         //the best card in the round
@@ -175,12 +174,19 @@ public class GameController extends Application {
 
         //decide the round winner
         roundWinner = decideRoundWinner(bestCard, scores);
+        //show the winner and the button to proceed to the next round
         gameTable.getNextRoundContainer().setVisible(true);
-        gameTable.getWinnerText().setText(roundWinner + " wins the round!");
+        //display the winner
+        gameTable.getWinnerText().setText(roundWinner + " wins round " + totalTurns + "!");
     }
     
     public void proceedToNextRound(){
         gameTable.getNextRoundContainer().setVisible(false);
+        
+        //if player 1 won the round
+        if(roundWinner.equals("P1")){
+            
+        }
     }
 
 //    public void playerTwoMove(card cardClicked, HBox playerCardsContainer, HBox middleSpace, ViewController viewController, MoveController moveController) throws InterruptedException {

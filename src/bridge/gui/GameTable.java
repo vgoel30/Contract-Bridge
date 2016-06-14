@@ -41,13 +41,13 @@ public class GameTable {
 
     VBox leftSpace;
     VBox rightSpace;
-    
+
     HBox topSpace;
-    
+
     VBox nextRoundContainer;
     Text winnerText;
     Button nextRoundButton;
-    
+
     HBox bottomSpace;
     HBox middleSpace;
 
@@ -100,18 +100,17 @@ public class GameTable {
         topSpace.setMinHeight(180);
         topSpace.setMaxHeight(180);
         tableDeck.setTop(topSpace);
-        
-        winnerText = new Text("WINNER");
+
+        winnerText = new Text();
         nextRoundButton = new Button("Next Round");
-        
-        nextRoundContainer = new VBox(winnerText,nextRoundButton);
+
+        nextRoundContainer = new VBox(winnerText, nextRoundButton);
         VBox.setMargin(winnerText, new Insets(70, 0, 0, 50));
         VBox.setMargin(nextRoundButton, new Insets(20, 0, 0, 50));
-        
+
         topSpace.getChildren().add(nextRoundContainer);
-        nextRoundContainer.setVisible(false);
-        
-        nextRoundButton.setOnAction(e-> {
+
+        nextRoundButton.setOnAction(e -> {
             gameController.proceedToNextRound();
         });
 
@@ -120,7 +119,8 @@ public class GameTable {
         topView.setFitWidth(148);
         topView.setRotate(180);
         topSpace.getChildren().add(topView);
-        HBox.setMargin(topView, new Insets(10, 50, 0, screenBounds.getWidth() / 2.8));
+        HBox.setMargin(topView, new Insets(10, 50, 0, screenBounds.getWidth() / 3.5));
+        nextRoundContainer.setVisible(false);
 
         rightSpace = new VBox();
         rightSpace.setMinSize(250, 250);
@@ -130,9 +130,9 @@ public class GameTable {
         rightView.setFitWidth(175);
         rightView.setRotate(270);
         rightSpace.getChildren().add(rightView);
-        
+
         VBox.setMargin(rightView, new Insets(70, 0, 0, 35));
-        
+
         bottomSpace = new HBox();
         bottomSpace.setMinHeight(175);
         bottomSpace.setMaxHeight(175);
@@ -140,19 +140,18 @@ public class GameTable {
 
         middleSpace = new HBox();
         tableDeck.setCenter(middleSpace);
-        
-        
+
         initStyle();
     }
-    
-    public void initStyle(){
+
+    public void initStyle() {
         middleSpace.setStyle("-fx-background-color: #006442");
         leftSpace.setStyle("-fx-background-color: #26A65B");
         rightSpace.setStyle("-fx-background-color: #26A65B");
         topSpace.setStyle("-fx-background-color: #26A65B");
         bottomSpace.setStyle("-fx-background-color: #26A65B");
         tableDeck.setStyle("-fx-background-color: #26A65B");
-        
+
         winnerText.setStyle("-fx-font-size: 22px");
     }
 
@@ -192,8 +191,8 @@ public class GameTable {
 
             //attach event handler
             cardImageView.setOnMouseClicked(e -> {
-                    gameController.handleCardClick(playerCard, bottomSpace, middleSpace, viewController);
-                
+                gameController.handleCardClick(playerCard, bottomSpace, middleSpace);
+
             });
         }
 
@@ -206,8 +205,8 @@ public class GameTable {
     public VBox getNextRoundContainer() {
         return nextRoundContainer;
     }
-    
-    public Text getWinnerText(){
+
+    public Text getWinnerText() {
         return winnerText;
     }
 
