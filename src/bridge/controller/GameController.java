@@ -414,10 +414,10 @@ public class GameController extends Application {
         empty(playerFourCardsInPlay);
 
         gameTable.emptyMiddleDeck();
+        gameTable.getNextRoundContainer().setVisible(false);
 
-        for (int score : scores) {
-            score = 0;
-        }
+        for(int i = 0; i < 4; i++)
+            scores[i] = 0;
 
         //gameTable.layoutGUI();
 
