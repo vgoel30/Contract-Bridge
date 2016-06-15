@@ -148,14 +148,11 @@ public class GameController extends Application {
                     playerOneMoveFirst(cardClicked, playerCardsContainer, middleSpace);
 
                 }
-
+                
+                //last round of the game
                 if (totalTurns == 13) {
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Information Dialog");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Scores: " + scores[0] + " " + scores[1] + " " + scores[2] + " " + scores[3]);
-                    alert.showAndWait();
-                    resetGame();
+                    gameTable.getNextRoundContainer().setVisible(true);
+                    gameTable.getWinnerText().setText("Final Scores: " + scores[0] + " " + scores[1] + " " + scores[2] + " " + scores[3]);
                 }
             }
         }
@@ -329,6 +326,9 @@ public class GameController extends Application {
                 playerFourMoveFirst(middleSpace);
             }
         }
+        else{
+            resetGame();
+        }
     }
 
     public void playerTwoMoveFirst(HBox middleSpace) {
@@ -395,7 +395,9 @@ public class GameController extends Application {
     }
 
     public void resetGame() {
+        //gameTable.reset();
         totalTurns = 0;
+        roundWinner = "P1";
 
         empty(deck);
 
@@ -417,7 +419,20 @@ public class GameController extends Application {
             score = 0;
         }
 
-        gameTable.layoutGUI();
+        //gameTable.layoutGUI();
+
+        //get the shuffled deck of cards
+        deck = setUpController.shuffle(setUpController.generateDeck());
+        //distribute cards to each player
+        setUpController.distributeCards(deck, playerOneCards, playerTwoCards, playerThreeCards, playerFourCards);
+
+        playerOneCardsInPlay.addAll(playerOneCards);
+        playerTwoCardsInPlay.addAll(playerTwoCards);
+        playerThreeCardsInPlay.addAll(playerThreeCards);
+        playerFourCardsInPlay.addAll(playerFourCards);
+
+        //set up the player cards on the table
+        gameTable.layoutCards(playerOneCards);
     }
 
     public void empty(ArrayList list) {

@@ -11,6 +11,7 @@ import bridge.controller.SetUpController;
 import bridge.controller.ViewController;
 import bridge.data.card;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
@@ -158,6 +159,7 @@ public class GameTable {
      * @param playerCards is the list of cards that the user has
      */
     public void layoutCards(ArrayList<card> playerCards) {
+        empty(bottomSpace.getChildren());
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
         char suit;
@@ -195,6 +197,14 @@ public class GameTable {
 
     }
     
+    public void reset(){
+        empty(middleSpace.getChildren());
+        empty(topSpace.getChildren());
+        empty(leftSpace.getChildren());
+        empty(rightSpace.getChildren());
+        empty(bottomSpace.getChildren());
+    }
+    
     public void emptyMiddleDeck(){
         middleSpace.getChildren().clear();
     }
@@ -209,6 +219,10 @@ public class GameTable {
 
     public Text getWinnerText() {
         return winnerText;
+    }
+    
+    public void empty(List list) {
+        list.removeAll(list);
     }
 
 }
